@@ -16,7 +16,7 @@ func (api *API) Application() *iris.Application {
 	return api.app
 }
 
-func (api *API) NewApiService() {
+func (api *API) NewService() {
 	api.app = iris.New()
 	if len(api.version) == 0 {
 		api.version = []string{"1"}
@@ -34,16 +34,20 @@ func (api *API) NewApiService() {
 			api.app.Logger().Fatal(err)
 		}
 	})
-	api.AddHtmlDirectory(api.htmlPath)
-	api.SetApiVersion(api.version)
+	api.addHtmlDirectory(api.htmlPath)
+	api.setApiVersion(api.version)
 }
 
-func (api *API) AddHtmlDirectory(path string) {
+func (api *API) addHtmlDirectory(path string) {
 	api.app.RegisterView(iris.HTML(path, ".html").Reload(true))
 }
 
-func (api *API) SetApiVersion(v []string) {
+func (api *API) setApiVersion(v []string) {
 	for _, version := range v {
 		mvc.Configure(api.app.Party("/api/v"+version), routes.Routes)
 	}
+}
+
+func (api *API) Run() {
+	api.Run()
 }
