@@ -1,4 +1,4 @@
-package routes
+package champiris
 
 import (
 	"github.com/iris-contrib/middleware/cors"
