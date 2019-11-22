@@ -1,7 +1,6 @@
 package champiris
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -10,9 +9,6 @@ import (
 	"time"
 
 	"github.com/kataras/iris/v12"
-
-	champLogger "git.championtek.com.tw/go/logger"
-	"git.championtek.com.tw/go/logger/templates"
 	"github.com/kataras/iris/v12/middleware/logger"
 )
 
@@ -29,46 +25,6 @@ var excludeExtensions = [...]string{
 	".png",
 	".ico",
 	".svg",
-}
-
-func (api *API) NewLoggerManager() error {
-	eklMap := irisConfig.ELK.Mapping
-	settings := templates.Settings{
-		NumberOfShards:   eklMap.Settings.NumberOfShards,
-		NumberOfReplicas: eklMap.Settings.NumberOfReplicas,
-	}
-	properties := templates.Properties{
-		Service: templates.Property{PropertyType: eklMap.Mappings.Properties.Service},
-		IP:      templates.Property{PropertyType: eklMap.Mappings.Properties.IP},
-		Status:  templates.Property{PropertyType: eklMap.Mappings.Properties.Status},
-		Method:  templates.Property{PropertyType: eklMap.Mappings.Properties.Method},
-		Path:    templates.Property{PropertyType: eklMap.Mappings.Properties.Path},
-		Created: templates.Property{PropertyType: eklMap.Mappings.Properties.Created},
-		Tags:    templates.Property{PropertyType: eklMap.Mappings.Properties.Tags},
-		Remark:  templates.Property{PropertyType: eklMap.Mappings.Properties.Remark},
-	}
-	mappings := templates.Mappings{Properties: properties}
-	template := templates.APIServiceMapping{
-		Settings: settings,
-		Mappings: mappings,
-	}
-	b, err := json.Marshal(template)
-	if err != nil {
-		return err
-	}
-	cfg := champLogger.Config{
-		Host:     irisConfig.ELK.Host.URL,
-		Port:     irisConfig.ELK.Host.PORT,
-		User:     irisConfig.ELK.BasicAuth.User,
-		Password: irisConfig.ELK.BasicAuth.Password,
-		Index:    irisConfig.ELK.Index,
-		Mapping:  string(b),
-	}
-	log.Printf("auth user:%v password:%v", irisConfig.ELK.BasicAuth.User, irisConfig.ELK.BasicAuth.Password)
-	if err := champLogger.Mgr.Init(&cfg); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (api *API) todayFileName() string {

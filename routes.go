@@ -18,4 +18,5 @@ func Routes(m *mvc.Application) {
 	m.Router.AllowMethods(iris.MethodOptions)
 	m.Router.Use(crs)
 	m.Handle(new(webPage))
+	m.Party("/query").Handle(new(Ql))
 }
