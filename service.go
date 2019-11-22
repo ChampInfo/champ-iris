@@ -47,6 +47,16 @@ func (api *API) setApiVersion(v []string) {
 	}
 }
 
-func (api *API) Run() {
-	api.Run()
+func (api *API) Run() error {
+	v := IrisNetWork{
+		Protocol: "",
+		Host:     "",
+		Port:     "8080",
+	}
+	err := api.app.Run(
+		iris.Addr(":"+v.Port),
+		iris.WithOptimizations,
+		iris.WithoutServerError(iris.ErrServerClosed),
+	)
+	return err
 }
