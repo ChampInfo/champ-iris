@@ -1,14 +1,15 @@
 package champiris
 
 import (
+	"errors"
+
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 )
 
-var irisConfig IrisNetWork
-
 type API struct {
 	app      *iris.Application
+	config   NetConfig
 	version  []string
 	htmlPath string
 }
@@ -25,7 +26,7 @@ func (api *API) SetVersion(version []string) {
 	api.version = version
 }
 
-func (api *API) NewService() {
+func (api *API) NewService(config NetConfig) error {
 	api.app = iris.New()
 	if len(api.version) == 0 {
 		api.version = []string{"1"}
@@ -33,6 +34,10 @@ func (api *API) NewService() {
 	if len(api.htmlPath) == 0 {
 		api.htmlPath = "./https/web"
 	}
+	if config.Port == "" {
+		return errors.New("network port not set")
+	}
+	api.config = config
 	requestLog, loggerClose := api.newRequestLogger()
 	api.app.Use(requestLog)
 	api.app.OnAnyErrorCode(requestLog, func(ctx iris.Context) {
@@ -45,10 +50,16 @@ func (api *API) NewService() {
 	})
 	api.addHtmlDirectory(api.htmlPath)
 	api.setApiVersion(api.version)
+	return nil
 }
 
-func (api *API) Configuration(config IrisNetWork) {
-	irisConfig = config
+func (api *API) Run() error {
+	err := api.app.Run(
+		iris.Addr(":"+api.config.Port),
+		iris.WithOptimizations,
+		iris.WithoutServerError(iris.ErrServerClosed),
+	)
+	return err
 }
 
 func (api *API) addHtmlDirectory(path string) {
@@ -59,13 +70,4 @@ func (api *API) setApiVersion(v []string) {
 	for _, version := range v {
 		mvc.Configure(api.app.Party("/api/v"+version), Routes)
 	}
-}
-
-func (api *API) Run() error {
-	err := api.app.Run(
-		iris.Addr(":"+irisConfig.Port),
-		iris.WithOptimizations,
-		iris.WithoutServerError(iris.ErrServerClosed),
-	)
-	return err
 }

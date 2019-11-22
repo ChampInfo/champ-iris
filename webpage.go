@@ -9,7 +9,7 @@ type webPage struct {
 	ctx iris.Context
 }
 
-func (w *webPage) Get() mvc.Result {
+func (w *webPage) Get() mvc.View {
 	return mvc.View{
 		Name: "graphql.html",
 	}
