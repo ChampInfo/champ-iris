@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/graphql-go/graphql"
-	"github.com/kataras/iris/v12"
 )
 
 func TestAPI_NewService(t *testing.T) {
@@ -13,10 +12,11 @@ func TestAPI_NewService(t *testing.T) {
 		Port: "8080",
 	})
 	server.app.Logger().SetLevel("debug")
-	_ = server.Run(addSe)
+	addSchema()
+	_ = server.Run()
 }
 
-func addSe(application *iris.Application) {
+func addSchema() {
 	Query.AddField(&graphql.Field{
 		Name: "qq",
 		Type: graphql.Int,
