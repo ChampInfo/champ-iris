@@ -1,7 +1,6 @@
 package champiris
 
 import (
-	"git.championtek.com.tw/champiris/routes"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 )
@@ -44,7 +43,7 @@ func (api *API) addHtmlDirectory(path string) {
 
 func (api *API) setApiVersion(v []string) {
 	for _, version := range v {
-		mvc.Configure(api.app.Party("/api/v"+version), routes.Routes)
+		mvc.Configure(api.app.Party("/api/v"+version), Routes)
 	}
 }
 

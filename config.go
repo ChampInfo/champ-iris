@@ -1,4 +1,4 @@
-package config
+package champiris
 
 type IrisNetWork struct {
 	Protocol string `json:"Protocol"`

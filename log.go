@@ -11,7 +11,6 @@ import (
 
 	"github.com/kataras/iris/v12"
 
-	"git.championtek.com.tw/champiris/config"
 	champLogger "git.championtek.com.tw/go/logger"
 	"git.championtek.com.tw/go/logger/templates"
 
@@ -33,7 +32,7 @@ var excludeExtensions = [...]string{
 	".svg",
 }
 
-func NewLoggerManager(config config.ELK) error {
+func NewLoggerManager(config ELK) error {
 	eklMap := config.Mapping
 	settings := templates.Settings{
 		NumberOfShards:   eklMap.Settings.NumberOfShards,
