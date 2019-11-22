@@ -17,6 +17,12 @@ func Routes(m *mvc.Application) {
 	})
 	m.Router.AllowMethods(iris.MethodOptions)
 	m.Router.Use(crs)
-	//m.Handle(new(apis.Web))
+	m.Handle(Get)
 	//m.Party("/query").Handle(new(apis.Query))
+}
+
+func Get() mvc.Result {
+	return mvc.View{
+		Name: "graphql.html",
+	}
 }

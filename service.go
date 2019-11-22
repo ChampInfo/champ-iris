@@ -5,6 +5,8 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 )
 
+var irisConfig IrisNetWork
+
 type API struct {
 	app      *iris.Application
 	version  []string
@@ -13,6 +15,14 @@ type API struct {
 
 func (api *API) Application() *iris.Application {
 	return api.app
+}
+
+func (api *API) SetHtmlPath(htmlPath string) {
+	api.htmlPath = htmlPath
+}
+
+func (api *API) SetVersion(version []string) {
+	api.version = version
 }
 
 func (api *API) NewService() {
@@ -37,24 +47,23 @@ func (api *API) NewService() {
 	api.setApiVersion(api.version)
 }
 
+func (api *API) Configuration(config IrisNetWork) {
+	irisConfig = config
+}
+
 func (api *API) addHtmlDirectory(path string) {
 	api.app.RegisterView(iris.HTML(path, ".html").Reload(true))
 }
 
 func (api *API) setApiVersion(v []string) {
-	for _, version := range v {
-		mvc.Configure(api.app.Party("/api/v"+version), Routes)
-	}
+	//for _, version := range v {
+	mvc.Configure(api.app.Party("/api/v1"), Routes)
+	//}
 }
 
 func (api *API) Run() error {
-	v := IrisNetWork{
-		Protocol: "",
-		Host:     "",
-		Port:     "8080",
-	}
 	err := api.app.Run(
-		iris.Addr(":"+v.Port),
+		iris.Addr(":"+irisConfig.Port),
 		iris.WithOptimizations,
 		iris.WithoutServerError(iris.ErrServerClosed),
 	)
