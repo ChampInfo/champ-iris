@@ -13,7 +13,6 @@ import (
 
 	champLogger "git.championtek.com.tw/go/logger"
 	"git.championtek.com.tw/go/logger/templates"
-
 	"github.com/kataras/iris/v12/middleware/logger"
 )
 
@@ -32,8 +31,8 @@ var excludeExtensions = [...]string{
 	".svg",
 }
 
-func NewLoggerManager(config ELK) error {
-	eklMap := config.Mapping
+func (api *API) NewLoggerManager() error {
+	eklMap := irisConfig.ELK.Mapping
 	settings := templates.Settings{
 		NumberOfShards:   eklMap.Settings.NumberOfShards,
 		NumberOfReplicas: eklMap.Settings.NumberOfReplicas,
@@ -58,14 +57,14 @@ func NewLoggerManager(config ELK) error {
 		return err
 	}
 	cfg := champLogger.Config{
-		Host:     config.Host.URL,
-		Port:     config.Host.PORT,
-		User:     config.BasicAuth.User,
-		Password: config.BasicAuth.Password,
-		Index:    config.Index,
+		Host:     irisConfig.ELK.Host.URL,
+		Port:     irisConfig.ELK.Host.PORT,
+		User:     irisConfig.ELK.BasicAuth.User,
+		Password: irisConfig.ELK.BasicAuth.Password,
+		Index:    irisConfig.ELK.Index,
 		Mapping:  string(b),
 	}
-	log.Printf("auth user:%v password:%v", config.BasicAuth.User, config.BasicAuth.Password)
+	log.Printf("auth user:%v password:%v", irisConfig.ELK.BasicAuth.User, irisConfig.ELK.BasicAuth.Password)
 	if err := champLogger.Mgr.Init(&cfg); err != nil {
 		return err
 	}

@@ -4,6 +4,8 @@ type IrisNetWork struct {
 	Protocol string `json:"Protocol"`
 	Host     string `json:"Host"`
 	Port     string `json:"Port"`
+	WebPath  bool   `json:"WebPath"`
+	ELK      ELK    `json:"elk"`
 }
 
 type ELK struct {

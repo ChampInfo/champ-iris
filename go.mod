@@ -1,4 +1,4 @@
-module git.championtek.com.tw/go/champiris
+module git.championtek.com.tw/champiris
 
 go 1.13
 
