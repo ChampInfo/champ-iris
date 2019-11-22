@@ -53,11 +53,12 @@ func (api *API) NewService(config NetConfig) error {
 	return nil
 }
 
-func (api *API) Run() error {
+func (api *API) Run(addSchema func(*iris.Application)) error {
 	err := api.app.Run(
 		iris.Addr(":"+api.config.Port),
 		iris.WithOptimizations,
 		iris.WithoutServerError(iris.ErrServerClosed),
+		addSchema,
 	)
 	return err
 }
