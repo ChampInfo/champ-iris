@@ -7,13 +7,13 @@ import (
 )
 
 func TestAPI_NewService(t *testing.T) {
-	var server API
-	_ = server.NewService(NetConfig{
+	var service Service
+	_ = service.New(NetConfig{
 		Port: "8080",
 	})
-	server.app.Logger().SetLevel("debug")
+	service.app.Logger().SetLevel("debug")
 	addSchema()
-	_ = server.Run()
+	_ = service.Run()
 }
 
 func addSchema() {

@@ -5,11 +5,11 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 )
 
-type webPage struct {
+type WebPage struct {
 	ctx iris.Context
 }
 
-func (w *webPage) Get() mvc.View {
+func (w *WebPage) Get() mvc.View {
 	return mvc.View{
 		Name: "graphql.html",
 	}

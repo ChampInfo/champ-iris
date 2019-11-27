@@ -27,16 +27,16 @@ var excludeExtensions = [...]string{
 	".svg",
 }
 
-func (api *API) todayFileName() string {
+func (service *Service) todayFileName() string {
 	today := time.Now()
 	formatted := fmt.Sprintf("%d-%02d-%02d", today.Year(), today.Month(), today.Day())
 	return path.Join(logFolder, formatted+".txt")
 }
-func (api *API) newLogFile() *os.File {
-	fileName := api.todayFileName()
+func (service *Service) newLogFile() *os.File {
+	fileName := service.todayFileName()
 
-	if _, err := os.Stat(logFolder); os.IsExist(err) {
-		err = os.Mkdir(logFolder, os.ModePerm)
+	if _, err := os.Stat(logFolder); os.IsNotExist(err) {
+		err = os.MkdirAll(logFolder, os.ModePerm)
 		if err != nil {
 			log.Fatal("Create logs folder error: ", err)
 		}
@@ -49,7 +49,7 @@ func (api *API) newLogFile() *os.File {
 	return f
 }
 
-func (api *API) newRequestLogger() (h iris.Handler, close func() error) {
+func (service *Service) newRequestLogger() (h iris.Handler, close func() error) {
 	close = func() error { return nil }
 
 	c := logger.Config{
@@ -60,7 +60,7 @@ func (api *API) newRequestLogger() (h iris.Handler, close func() error) {
 		Columns: true,
 	}
 
-	logFile := api.newLogFile()
+	logFile := service.newLogFile()
 
 	fmt.Println(logFile.Name())
 
