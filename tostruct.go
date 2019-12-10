@@ -61,7 +61,7 @@ func assign(dstVal reflect.Value, src interface{}, tagName string) bool {
 	case reflect.Bool:
 		fallthrough
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		fallthrough
+		return coerceInt(dstVal, src)
 	case reflect.String:
 		dstVal.Set(reflect.ValueOf(src))
 		return true
@@ -128,4 +128,22 @@ func assign(dstVal reflect.Value, src interface{}, tagName string) bool {
 	default:
 		return false
 	}
+}
+
+func coerceInt(val reflect.Value, src interface{}) bool {
+	switch val.Kind() {
+	case reflect.Int:
+		val.Set(reflect.ValueOf(int(reflect.TypeOf(src).Kind())))
+	case reflect.Int8:
+		val.Set(reflect.ValueOf(int8(reflect.TypeOf(src).Kind())))
+	case reflect.Int16:
+		val.Set(reflect.ValueOf(int16(reflect.TypeOf(src).Kind())))
+	case reflect.Int32:
+		val.Set(reflect.ValueOf(int32(reflect.TypeOf(src).Kind())))
+	case reflect.Int64:
+		val.Set(reflect.ValueOf(int64(reflect.TypeOf(src).Kind())))
+	default:
+		return false
+	}
+	return true
 }
