@@ -133,15 +133,19 @@ func assign(dstVal reflect.Value, src interface{}, tagName string) bool {
 func coerceInt(val reflect.Value, src interface{}) bool {
 	switch val.Kind() {
 	case reflect.Int:
-		val.Set(reflect.ValueOf(int(reflect.TypeOf(src).Kind())))
+		val.Set(reflect.ValueOf(src))
 	case reflect.Int8:
-		val.Set(reflect.ValueOf(int8(reflect.TypeOf(src).Kind())))
+		i := int8(src.(int))
+		val.Set(reflect.ValueOf(i))
 	case reflect.Int16:
-		val.Set(reflect.ValueOf(int16(reflect.TypeOf(src).Kind())))
+		i := int16(src.(int))
+		val.Set(reflect.ValueOf(i))
 	case reflect.Int32:
-		val.Set(reflect.ValueOf(int32(reflect.TypeOf(src).Kind())))
+		i := int32(src.(int))
+		val.Set(reflect.ValueOf(i))
 	case reflect.Int64:
-		val.Set(reflect.ValueOf(int64(reflect.TypeOf(src).Kind())))
+		i := int64(src.(int))
+		val.Set(reflect.ValueOf(i))
 	default:
 		return false
 	}

@@ -34,7 +34,7 @@ func addSchema() {
 		},
 		Resolve: func(p graphql.ResolveParams) (i interface{}, e error) {
 			type Member struct {
-				ID int `json:"id"`
+				ID int8 `json:"id"`
 			}
 			member := Member{}
 			ToStruct(p.Args, &member)
