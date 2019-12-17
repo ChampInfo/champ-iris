@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 	"time"
 
@@ -12,10 +13,18 @@ import (
 	"github.com/kataras/iris/v12/middleware/logger"
 )
 
-const (
+var (
 	logFolder         = "logs"
+)
+
+const (
 	deleteFileOnExist = true
 )
+
+func init() {
+	_, currentFilePath, _, _ := runtime.Caller(0)
+	logFolder = path.Join(path.Dir(currentFilePath), logFolder)
+}
 
 var excludeExtensions = [...]string{
 	".js",
@@ -32,6 +41,7 @@ func (service *Service) todayFileName() string {
 	formatted := fmt.Sprintf("%d-%02d-%02d", today.Year(), today.Month(), today.Day())
 	return path.Join(logFolder, formatted+".txt")
 }
+
 func (service *Service) newLogFile() *os.File {
 	fileName := service.todayFileName()
 

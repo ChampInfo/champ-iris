@@ -1,30 +1,20 @@
-package champiris
+package tests
 
 import (
-	"testing"
-
+	"errors"
+	"git.championtek.com.tw/go/champiris"
 	"github.com/graphql-go/graphql"
 )
 
-func TestAPI_NewService(t *testing.T) {
-	var service Service
-	_ = service.New(NetConfig{
-		Port: "8080",
-	})
-	service.app.Logger().SetLevel("debug")
-	addSchema()
-	_ = service.Run()
-}
-
 func addSchema() {
-	Query.AddField(&graphql.Field{
+	champiris.Query.AddField(&graphql.Field{
 		Name: "qq",
 		Type: graphql.Int,
 		Resolve: func(p graphql.ResolveParams) (i interface{}, e error) {
-			return 1, nil
+			return 1, errors.New("WTF")
 		},
 	})
-	Mutation.AddField(&graphql.Field{
+	champiris.Mutation.AddField(&graphql.Field{
 		Name: "ff",
 		Type: graphql.Int,
 		Args: graphql.FieldConfigArgument{
@@ -37,7 +27,7 @@ func addSchema() {
 				ID int8 `json:"id"`
 			}
 			member := Member{}
-			ToStruct(p.Args, &member)
+			champiris.ToStruct(p.Args, &member)
 			return member.ID, nil
 		},
 	})
