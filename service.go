@@ -60,8 +60,8 @@ func (service *Service) New(config *NetConfig) error {
 	})
 
 	service.registerStaticWebPages(service.HtmlPath)
-	//同時間可能會存在多個版本的API，目前先暫定同時存在2個版本
-	service.setVersionRoutingPath(service.Versions)
+	//同時間可能會存在多個版本的API，目前先暫定同時存在2個版本，前一版跟最新版
+	service.setVersionRoutingPath(service.Versions, service.Config.LoggerEnable)
 
 	return nil
 }
@@ -90,8 +90,12 @@ func (service *Service) registerStaticWebPages(path string) {
 	service.App.RegisterView(iris.HTML(path, ".html").Reload(true))
 }
 
-func (service *Service) setVersionRoutingPath(versions []string) {
+func (service *Service) setVersionRoutingPath(versions []string, loggerEnable bool) {
 	for _, version := range versions {
-		mvc.Configure(service.App.Party("/service/v"+version), Routes)
+		if loggerEnable == true {
+
+		} else {
+			mvc.Configure(service.App.Party("/service/v"+version), Routes)
+		}
 	}
 }

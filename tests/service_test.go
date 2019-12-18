@@ -9,6 +9,8 @@ func TestAPI_NewService(t *testing.T) {
 	var service champiris.Service
 	_ = service.New(&champiris.NetConfig{
 		Port: "8080",
+		LoggerEnable: true,
+		JWTEnable: true,
 	})
 
 	service.App.Logger().SetLevel("debug")

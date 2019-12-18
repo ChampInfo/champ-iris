@@ -6,8 +6,8 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 )
 
-func Routes(m *mvc.Application) {
-	crs := cors.New(cors.Options{
+var (
+	crs = cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"HEAD", "POST", "GET", "PATCH", "DELETE"},
 		AllowedHeaders:   []string{"*"},
@@ -15,8 +15,24 @@ func Routes(m *mvc.Application) {
 		AllowCredentials: true,
 		Debug:            true,
 	})
+)
+
+func Routes(m *mvc.Application) {
+	//crs := cors.New(cors.Options{
+	//	AllowedOrigins:   []string{"*"},
+	//	AllowedMethods:   []string{"HEAD", "POST", "GET", "PATCH", "DELETE"},
+	//	AllowedHeaders:   []string{"*"},
+	//	ExposedHeaders:   []string{"Authorization"},
+	//	AllowCredentials: true,
+	//	Debug:            true,
+	//})
 	m.Router.AllowMethods(iris.MethodOptions)
 	m.Router.Use(crs)
 	m.Handle(new(WebPage))
 	m.Party("/query").Handle(new(Ql))
+}
+
+func RoutesWithLogger(m *mvc.Application) {
+	m.Router.AllowMethods(iris.MethodOptions)
+	m.Router.Use(crs)
 }

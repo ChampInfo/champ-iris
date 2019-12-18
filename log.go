@@ -38,7 +38,7 @@ var excludeExtensions = [...]string{
 
 func (service *Service) todayFileName() string {
 	today := time.Now()
-	formatted := fmt.Sprintf("%d-%02d-%02d", today.Year(), today.Month(), today.Day())
+	formatted := fmt.Sprintf("%s_%d-%02d-%02d", "champiris", today.Year(), today.Month(), today.Day())
 	return path.Join(logFolder, formatted+".txt")
 }
 
