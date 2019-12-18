@@ -1,4 +1,4 @@
-package logger
+package elklogger
 
 import (
 	"encoding/json"

@@ -1,6 +1,8 @@
 package champiris
 
 import (
+	"git.championtek.com.tw/go/champiris/middleware/elklogger"
+	"git.championtek.com.tw/go/logger/v2"
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
@@ -15,6 +17,18 @@ var (
 		AllowCredentials: true,
 		Debug:            true,
 	})
+	
+	elkl = elklogger.New(logger.ELKConfig{ELK:logger.ELKInfo{
+		Host:      logger.Host{
+			logger.Host{
+				URL:  "",
+				PORT: "",
+			}
+		},
+		Index:     "",
+		BasicAuth: logger.Auth{},
+		Mapping:   logger.Mapping{},
+	}})
 )
 
 func Routes(m *mvc.Application) {
