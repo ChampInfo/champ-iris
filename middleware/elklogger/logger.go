@@ -1,13 +1,12 @@
 package elklogger
 
 import (
+	"fmt"
 	"git.championtek.com.tw/go/logger/v2"
 	"github.com/kataras/iris/v12/context"
-	"github.com/olivere/elastic/v7"
 )
 
 type Logger struct {
-	elkClient *elastic.Client
 }
 
 func New(cfg *logger.ELKConfig) context.Handler {
@@ -24,11 +23,10 @@ func New(cfg *logger.ELKConfig) context.Handler {
 	}
 	_ = logger.Mgr.Init(&loggerCfg)
 
-	l.elkClient = logger.Mgr.Client()
-
 	return l.Serve
 }
 
 func (l *Logger) Serve(ctx context.Context) {
+	fmt.Println("middleware next...")
 	ctx.Next()
 }
