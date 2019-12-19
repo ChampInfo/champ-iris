@@ -17,17 +17,15 @@ var (
 		AllowCredentials: true,
 		Debug:            true,
 	})
-	
-	elkl = elklogger.New(logger.ELKConfig{ELK:logger.ELKInfo{
-		Host:      logger.Host{
-			logger.Host{
-				URL:  "",
-				PORT: "",
-			}
-		},
-		Index:     "",
-		BasicAuth: logger.Auth{},
-		Mapping:   logger.Mapping{},
+
+	elk = elklogger.New(&logger.ELKConfig{ELK:logger.ELKInfo{
+		URL:              "http://52.196.196.142",
+		Port:             "9200",
+		Index:            "champ_iris",
+		User:             "elastic",
+		Password:         "work$t/6qup3",
+		NumberOfShards:   1,
+		NumberOfReplicas: 0,
 	}})
 )
 
@@ -48,5 +46,7 @@ func Routes(m *mvc.Application) {
 
 func RoutesWithLogger(m *mvc.Application) {
 	m.Router.AllowMethods(iris.MethodOptions)
-	m.Router.Use(crs)
+	m.Router.Use(crs, elk)
+	m.Handle(new(WebPage))
+	m.Party("/query").Handle(new(Ql))
 }

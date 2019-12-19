@@ -1,9 +1,7 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-git.championtek.com.tw/go/logger/v2 v2.0.4 h1:jgcUgkL0HGaY4sXFk4d02pCYvGf605YP8VD2EGz31tE=
-git.championtek.com.tw/go/logger/v2 v2.0.4/go.mod h1:c+Q27zPJLWX1roQUPfCft1WalOLVq17nKx9Fh5DPMFY=
-git.championtek.com.tw/go/mlog v1.1.0 h1:djIONMyf8hWzOP+rhmZ+C2GGIGAj+ZJRbYHKRlcpInY=
-git.championtek.com.tw/go/mlog v1.1.0/go.mod h1:VqbhH94dVSASbQXJZCf9bqDpWepEDbuSP6ofUUGbSmg=
+git.championtek.com.tw/go/logger/v2 v2.0.7 h1:hThpiO8xEzL3kCS/w7Jbp2EUIJCGxKgHm42MfknGJy8=
+git.championtek.com.tw/go/logger/v2 v2.0.7/go.mod h1:KesMnshPCGj3lre7itTYheYJU6IMi0YUCTRosuh9gUI=
 github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9/go.mod h1:bOvUY6CB00SOBii9/FifXqc0awNKxLFCL/+pkDPuyl8=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=

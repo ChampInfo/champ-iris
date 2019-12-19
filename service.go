@@ -93,7 +93,7 @@ func (service *Service) registerStaticWebPages(path string) {
 func (service *Service) setVersionRoutingPath(versions []string, loggerEnable bool) {
 	for _, version := range versions {
 		if loggerEnable == true {
-
+			mvc.Configure(service.App.Party("/service/v"+version), RoutesWithLogger)
 		} else {
 			mvc.Configure(service.App.Party("/service/v"+version), Routes)
 		}
