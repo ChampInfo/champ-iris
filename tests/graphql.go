@@ -1,12 +1,13 @@
-package champiris
+package tests
 
 import (
+	"git.championtek.com.tw/go/champiris"
 	"github.com/graphql-go/graphql"
 	"github.com/kataras/iris/v12"
 )
 
-var Query RootType
-var Mutation RootType
+var Query champiris.RootType
+var Mutation champiris.RootType
 
 func init() {
 	Query.New("Query", "搜尋&取得資料的相關命令")

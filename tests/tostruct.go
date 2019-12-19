@@ -1,4 +1,4 @@
-package champiris
+package tests
 
 import (
 	"reflect"
