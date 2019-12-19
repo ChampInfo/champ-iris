@@ -9,7 +9,7 @@ var Query RootType
 var Mutation RootType
 
 func init() {
-	Query.New("Query", "收尋&取得資料的相關命令")
+	Query.New("Query", "搜尋&取得資料的相關命令")
 	Mutation.New("Mutation", "主要用在建立、修改、刪除的相關命令")
 }
 

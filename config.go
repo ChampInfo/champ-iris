@@ -1,7 +1,9 @@
 package champiris
 
 type NetConfig struct {
-	Protocol string `json:"Protocol"`
-	Host     string `json:"Host"`
-	Port     string `json:"Port"`
+	Protocol        string  `json:"Protocol"`
+	Host            string  `json:"Host"`
+	Port            string  `json:"Port"`
+	LoggerEnable    bool    `json:"LoggerEnable"`
+	JWTEnable       bool    `json:"JWTEnable"`
 }

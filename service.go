@@ -5,67 +5,78 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
+	"runtime"
+	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
+
+	stdContext "context"
 )
 
 type Service struct {
-	app      *iris.Application
-	config   NetConfig
-	version  []string
-	htmlPath string
+	App         *iris.Application
+	Config      *NetConfig
+	Versions    []string
+	HtmlPath    string
 }
 
-//Application get the iris application
-func (service *Service) Application() *iris.Application {
-	return service.app
-}
+func (service *Service) New(config *NetConfig) error {
+	service.App = iris.New()
 
-//HtmlPath set html path
-func (service *Service) HtmlPath(htmlPath string) {
-	service.htmlPath = htmlPath
-}
-
-//Version set version
-func (service *Service) Version(version []string) {
-	service.version = version
-}
-
-func (service *Service) New(config NetConfig) error {
-	service.app = iris.New()
-	if len(service.version) == 0 { // set the default version
-		service.version = []string{"1"}
+	if len(service.Versions) == 0 { // set the default version
+		service.Versions = []string{"1"}
 	}
-	if len(service.htmlPath) == 0 { // set the default html path
-		service.htmlPath = "./https/web"
+
+	if len(service.HtmlPath) == 0 { // set the default html path
+		_, currentFilePath, _, _ := runtime.Caller(0)
+		configFilePath := path.Join(path.Dir(currentFilePath), "https/web")
+		service.HtmlPath = configFilePath
 	}
+
 	if config.Port == "" {
 		return errors.New("network port not set")
 	}
-	service.config = config
+
+	service.Config = config
 
 	requestLog, loggerClose := service.newRequestLogger()
-	service.app.Use(requestLog)
-	service.app.OnAnyErrorCode(requestLog, func(ctx iris.Context) {
+	service.App.Use(requestLog)
+	service.App.OnAnyErrorCode(requestLog, func(ctx iris.Context) {
 		ctx.Values().Set("logger_message", "a dynamic message passed to the logs")
 	})
+
 	iris.RegisterOnInterrupt(func() {
 		if err := loggerClose(); err != nil {
-			service.app.Logger().Fatal(err)
+			service.App.Logger().Fatal(err)
 		}
+
+		timeout := 5 * time.Second
+		ctx, cancel := stdContext.WithTimeout(stdContext.Background(), timeout)
+		defer cancel()
+		//close all hosts
+		service.App.Shutdown(ctx)
 	})
-	service.registerStaticWebPages(service.htmlPath)
-	service.setVersionRoutingPath(service.version)
+
+	service.registerStaticWebPages(service.HtmlPath)
+	//同時間可能會存在多個版本的API，目前先暫定同時存在2個版本，前一版跟最新版
+	service.setVersionRoutingPath(service.Versions, service.Config.LoggerEnable)
+
 	return nil
 }
 
 func (service *Service) Run() error {
-	err := service.app.Run(
-		iris.Addr(":"+service.config.Port),
+	err := service.App.Run(
+		iris.Addr(":"+service.Config.Port),
 		iris.WithOptimizations,
 		iris.WithoutServerError(iris.ErrServerClosed),
 	)
+	return err
+}
+
+func (service *Service) Interrupt() error {
+	err := service.App.Shutdown(stdContext.Background())
 	return err
 }
 
@@ -76,11 +87,15 @@ func (service *Service) registerStaticWebPages(path string) {
 			log.Fatal(fmt.Sprintf("Create %s error: ", path), err)
 		}
 	}
-	service.app.RegisterView(iris.HTML(path, ".html").Reload(true))
+	service.App.RegisterView(iris.HTML(path, ".html").Reload(true))
 }
 
-func (service *Service) setVersionRoutingPath(versions []string) {
+func (service *Service) setVersionRoutingPath(versions []string, loggerEnable bool) {
 	for _, version := range versions {
-		mvc.Configure(service.app.Party("/service/v"+version), Routes)
+		if loggerEnable == true {
+			mvc.Configure(service.App.Party("/service/v"+version), RoutesWithLogger)
+		} else {
+			mvc.Configure(service.App.Party("/service/v"+version), Routes)
+		}
 	}
 }
