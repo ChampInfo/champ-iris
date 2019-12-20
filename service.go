@@ -9,10 +9,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/kataras/iris/v12/context"
-
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/mvc"
+	mvc "github.com/kataras/iris/v12/mvc"
 
 	stdContext "context"
 )
@@ -24,9 +22,8 @@ type Service struct {
 }
 
 type RouterSet struct {
-	Party      string
-	Router     RoutesFunc
-	Middleware []context.Handler
+	Party  string
+	Router RoutesFunc
 }
 
 type RoutesFunc func(m *mvc.Application)
@@ -98,5 +95,5 @@ func (service *Service) registerStaticWebPages(path string) {
 }
 
 func (service *Service) setRoutingPath(set RouterSet) {
-	mvc.Configure(service.App.Party(set.Party), set.Router).Router.Use(set.Middleware...)
+	mvc.Configure(service.App.Party(set.Party), set.Router)
 }

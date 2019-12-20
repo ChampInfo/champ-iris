@@ -1,14 +1,14 @@
 package tests
 
 import (
+	"testing"
+
 	"git.championtek.com.tw/go/champiris/middleware/elklogger"
 	"git.championtek.com.tw/go/logger/v2"
-	"testing"
 
 	"github.com/kataras/iris/v12/mvc"
 
 	"github.com/iris-contrib/middleware/cors"
-	"github.com/kataras/iris/v12/context"
 
 	"git.championtek.com.tw/go/champiris"
 )
@@ -23,7 +23,7 @@ func TestAPI_NewService(t *testing.T) {
 	})
 
 	// if LoggerEnable is true, then setup logger
-	elk := elklogger.New(&logger.ELKConfig{ELK:logger.ELKInfo{
+	elk := elklogger.New(&logger.ELKConfig{ELK: logger.ELKInfo{
 		URL:              "http://52.196.196.142",
 		Port:             "9200",
 		Index:            "champ_iris",
@@ -37,10 +37,11 @@ func TestAPI_NewService(t *testing.T) {
 	router := champiris.RouterSet{
 		Party: "/service/v1",
 		Router: func(m *mvc.Application) {
+			m.Router.Use(cors.AllowAll())
+			m.Router.Use(elk)
 			m.Party("/query").Handle(new(Ql))
 			m.Handle(new(WebPage))
 		},
-		Middleware: []context.Handler{cors.AllowAll(), elk},
 	}
 	service.AddRoute(router)
 	addSchema()
