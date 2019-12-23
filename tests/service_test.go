@@ -26,6 +26,7 @@ func TestAPI_NewService(t *testing.T) {
 	elk := elklogger.New(&logger.ELKConfig{ELK: logger.ELKInfo{
 		URL:              "http://52.196.196.142",
 		Port:             "9200",
+		Type:             0,
 		Index:            "champ_iris",
 		User:             "elastic",
 		Password:         "work$t/6qup3",
