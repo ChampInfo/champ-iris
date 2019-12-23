@@ -34,6 +34,9 @@ func TestAPI_NewService(t *testing.T) {
 		NumberOfReplicas: 0,
 	}})
 
+	// if JWTEnable is true, then setup jwt
+	
+
 	service.App.Logger().SetLevel("debug")
 	router := champiris.RouterSet{
 		Party: "/service/v1",
