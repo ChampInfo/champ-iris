@@ -23,7 +23,7 @@ func New(cfg *passport.Config) context.Handler {
 
 func (p *Passport) Serve(ctx context.Context) {
 	tokenRaw, err := passport.Psp.RetrieveTokenFromHeader(ctx)
-	if err != nil {
+	if err != nil || len(tokenRaw) == 0 {
 		rs := responses.Responses{
 			HeaderCode: iris.StatusBadRequest,
 			Status:     responses.JWTTokenNotExist,

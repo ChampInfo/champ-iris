@@ -1,6 +1,9 @@
 package tests
 
 import (
+	"git.championtek.com.tw/go/champiris/middleware/jwtpassport"
+	"git.championtek.com.tw/go/passport"
+	"github.com/kataras/iris/v12/context"
 	"testing"
 
 	"git.championtek.com.tw/go/champiris/middleware/elklogger"
@@ -15,34 +18,55 @@ import (
 
 func TestAPI_NewService(t *testing.T) {
 	var service champiris.Service
+	var elk context.Handler
+	var psp context.Handler
 
 	_ = service.New(&champiris.NetConfig{
 		Port:         "8080",
-		LoggerEnable: true,
-		JWTEnable:    true,
+		LoggerEnable: false,
+		JWTEnable:    false,
 	})
 
-	// if LoggerEnable is true, then setup logger
-	elk := elklogger.New(&logger.ELKConfig{ELK: logger.ELKInfo{
-		URL:              "http://52.196.196.142",
-		Port:             "9200",
-		Type:             0,
-		Index:            "champ_iris",
-		User:             "elastic",
-		Password:         "work$t/6qup3",
-		NumberOfShards:   1,
-		NumberOfReplicas: 0,
-	}})
+	if service.Config.LoggerEnable {
+		// if LoggerEnable is true, then setup logger
+		elk = elklogger.New(&logger.ELKConfig{ELK: logger.ELKInfo{
+			URL:              "http://52.196.196.142",
+			Port:             "9200",
+			Type:             0,
+			Index:            "champ_iris",
+			User:             "elastic",
+			Password:         "work$t/6qup3",
+			NumberOfShards:   1,
+			NumberOfReplicas: 0,
+		}})
+	}
 
-	// if JWTEnable is true, then setup jwt
-	
+	if service.Config.JWTEnable {
+		// if JWTEnable is true, then setup jwt
+		psp = jwtpassport.New(&passport.Config{
+			Secret: "champ",
+			Claims: passport.PublicClaims{
+				Audience:    "bskini",
+				Subject:     "champiris",
+				Email:       "service@dishrank.com",
+				PhoneNumber: "",
+				Issuer:      "drc",
+				Duration:    3600,
+			},
+		})
+	}
 
 	service.App.Logger().SetLevel("debug")
 	router := champiris.RouterSet{
 		Party: "/service/v1",
 		Router: func(m *mvc.Application) {
 			m.Router.Use(cors.AllowAll())
-			m.Router.Use(elk)
+			if elk != nil {
+				m.Router.Use(elk)
+			}
+			if psp != nil {
+				m.Router.Use(psp)
+			}
 			m.Party("/query").Handle(new(Ql))
 			m.Handle(new(WebPage))
 		},

@@ -2,8 +2,6 @@ package tests
 
 import (
 	"errors"
-	"fmt"
-
 	"github.com/graphql-go/graphql"
 )
 
@@ -22,9 +20,6 @@ func addSchema() {
 			"id": &graphql.ArgumentConfig{
 				Type: graphql.Int,
 			},
-			"Upload": &graphql.ArgumentConfig{
-				Type: graphql.NewList(UploadScalar),
-			},
 		},
 		Resolve: func(p graphql.ResolveParams) (i interface{}, e error) {
 			type Member struct {
@@ -32,8 +27,6 @@ func addSchema() {
 			}
 			member := Member{}
 			ToStruct(p.Args, &member)
-			file := p.Args["Upload"].([]interface{})
-			fmt.Println(file)
 			return member.ID, nil
 		},
 	})
