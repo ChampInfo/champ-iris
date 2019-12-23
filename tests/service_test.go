@@ -3,14 +3,14 @@ package tests
 import (
 	"testing"
 
-	"git.championtek.com.tw/go/champiris/middleware/elklogger"
+	"git.championtek.com.tw/champiris/middleware/elklogger"
 	"git.championtek.com.tw/go/logger/v2"
 
 	"github.com/kataras/iris/v12/mvc"
 
 	"github.com/iris-contrib/middleware/cors"
 
-	"git.championtek.com.tw/go/champiris"
+	"git.championtek.com.tw/champiris"
 )
 
 func TestAPI_NewService(t *testing.T) {
