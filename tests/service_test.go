@@ -1,20 +1,31 @@
 package tests
 
 import (
+	"testing"
+
 	"git.championtek.com.tw/go/champiris/middleware/jwtpassport"
 	"git.championtek.com.tw/go/passport"
 	"github.com/kataras/iris/v12/context"
-	"testing"
 
 	"git.championtek.com.tw/go/champiris/middleware/elklogger"
 	"git.championtek.com.tw/go/logger/v2"
 
 	"github.com/kataras/iris/v12/mvc"
 
-	"github.com/iris-contrib/middleware/cors"
-
 	"git.championtek.com.tw/go/champiris"
+	"git.championtek.com.tw/go/champiris-contrib/graphql"
+	"github.com/iris-contrib/middleware/cors"
 )
+
+var Ql graphql.Graphql
+
+func init() {
+	Ql = graphql.Graphql{
+		ShowPlayground: true,
+	}
+	Ql.Query.New("Query", "搜尋&取得資料的相關命令")
+	Ql.Mutation.New("Mutation", "主要用在建立、修改、刪除的相關命令")
+}
 
 func TestAPI_NewService(t *testing.T) {
 	var service champiris.Service
@@ -67,8 +78,7 @@ func TestAPI_NewService(t *testing.T) {
 			if psp != nil {
 				m.Router.Use(psp)
 			}
-			m.Party("/query").Handle(new(Ql))
-			m.Handle(new(WebPage))
+			m.Handle(&Ql)
 		},
 	}
 	service.AddRoute(router)
