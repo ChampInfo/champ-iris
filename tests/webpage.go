@@ -1,4 +1,4 @@
-package champiris
+package tests
 
 import (
 	"github.com/kataras/iris/v12"

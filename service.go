@@ -10,24 +10,26 @@ import (
 	"time"
 
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/mvc"
+	mvc "github.com/kataras/iris/v12/mvc"
 
 	stdContext "context"
 )
 
 type Service struct {
-	App         *iris.Application
-	Config      *NetConfig
-	Versions    []string
-	HtmlPath    string
+	App      *iris.Application
+	Config   *NetConfig
+	HtmlPath string
 }
+
+type RouterSet struct {
+	Party  string
+	Router RoutesFunc
+}
+
+type RoutesFunc func(m *mvc.Application)
 
 func (service *Service) New(config *NetConfig) error {
 	service.App = iris.New()
-
-	if len(service.Versions) == 0 { // set the default version
-		service.Versions = []string{"1"}
-	}
 
 	if len(service.HtmlPath) == 0 { // set the default html path
 		_, currentFilePath, _, _ := runtime.Caller(0)
@@ -60,10 +62,12 @@ func (service *Service) New(config *NetConfig) error {
 	})
 
 	service.registerStaticWebPages(service.HtmlPath)
-	//同時間可能會存在多個版本的API，目前先暫定同時存在2個版本，前一版跟最新版
-	service.setVersionRoutingPath(service.Versions, service.Config.LoggerEnable)
 
 	return nil
+}
+
+func (service *Service) AddRoute(set RouterSet) {
+	service.setRoutingPath(set)
 }
 
 func (service *Service) Run() error {
@@ -90,12 +94,6 @@ func (service *Service) registerStaticWebPages(path string) {
 	service.App.RegisterView(iris.HTML(path, ".html").Reload(true))
 }
 
-func (service *Service) setVersionRoutingPath(versions []string, loggerEnable bool) {
-	for _, version := range versions {
-		if loggerEnable == true {
-			mvc.Configure(service.App.Party("/service/v"+version), RoutesWithLogger)
-		} else {
-			mvc.Configure(service.App.Party("/service/v"+version), Routes)
-		}
-	}
+func (service *Service) setRoutingPath(set RouterSet) {
+	mvc.Configure(service.App.Party(set.Party), set.Router)
 }

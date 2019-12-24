@@ -1,34 +1,62 @@
 package elklogger
 
 import (
+	"bytes"
+	"encoding/json"
 	"git.championtek.com.tw/go/logger/v2"
 	"github.com/kataras/iris/v12/context"
-	"github.com/olivere/elastic/v7"
+	"io/ioutil"
+	"log"
+	"time"
 )
 
 type Logger struct {
-	elkClient *elastic.Client
+	logType int
 }
 
 func New(cfg *logger.ELKConfig) context.Handler {
 	l := &Logger{}
-	
+
+	l.logType = cfg.ELK.Type
+
 	loggerCfg := logger.Config{
-		Host:     cfg.ELK.URL,
-		Port:     cfg.ELK.Port,
-		User:     cfg.ELK.User,
-		Password: cfg.ELK.Password,
-		Index:    cfg.ELK.Index,
-		NumberOfShards: cfg.ELK.NumberOfShards,
+		Host:             cfg.ELK.URL,
+		Port:             cfg.ELK.Port,
+		Type:             cfg.ELK.Type,
+		User:             cfg.ELK.User,
+		Password:         cfg.ELK.Password,
+		Index:            cfg.ELK.Index,
+		NumberOfShards:   cfg.ELK.NumberOfShards,
 		NumberOfReplicas: cfg.ELK.NumberOfReplicas,
 	}
 	_ = logger.Mgr.Init(&loggerCfg)
-
-	l.elkClient = logger.Mgr.Client()
 
 	return l.Serve
 }
 
 func (l *Logger) Serve(ctx context.Context) {
+	port := ctx.RemoteAddr()
+	body, _ := ctx.GetBody()
+	if l.logType == logger.GraphqlTemplate {
+		graphqlBody := &GraphqlBody{}
+		json.Unmarshal(body, graphqlBody)
+		if len(graphqlBody.Query) != 0 {
+			logData := logger.GraphqlService{
+				IP:      port,
+				Request: ctx.GetCurrentRoute(),
+				Result:  graphqlBody.Query + " - " + graphqlBody.Variables + " - " + graphqlBody.OperationName,
+				Created: time.Time{},
+				Tags:    nil,
+				Remark:  "",
+			}
+			if err := logger.Mgr.PutLog(&logData); err != nil {
+				log.Panicln(err)
+			}
+		}
+	} else {//Restful request
+
+	}
+
+	ctx.Request().Body = ioutil.NopCloser(bytes.NewBuffer(body))
 	ctx.Next()
 }
