@@ -45,7 +45,7 @@ func (l *Logger) Serve(ctx context.Context) {
 				IP:      port,
 				Request: ctx.GetCurrentRoute(),
 				Result:  graphqlBody.Query + " - " + graphqlBody.Variables + " - " + graphqlBody.OperationName,
-				Created: time.Time{},
+				Created: time.Now(),
 				Tags:    nil,
 				Remark:  "",
 			}
