@@ -2,32 +2,38 @@ package tests
 
 import (
 	"errors"
+
 	"github.com/graphql-go/graphql"
 )
 
 func addSchema() {
-	Query.AddField(&graphql.Field{
+	Ql.Query.AddField(&graphql.Field{
 		Name: "qq",
 		Type: graphql.Int,
 		Resolve: func(p graphql.ResolveParams) (i interface{}, e error) {
 			return 1, errors.New("WTF")
 		},
 	})
-	Mutation.AddField(&graphql.Field{
+	Ql.Mutation.AddField(&graphql.Field{
 		Name: "ff",
-		Type: graphql.Int,
+		Type: graphql.NewObject(graphql.ObjectConfig{
+			Name:   "Member",
+			Fields: graphql.BindFields(Member{}),
+		}),
 		Args: graphql.FieldConfigArgument{
 			"id": &graphql.ArgumentConfig{
 				Type: graphql.Int,
 			},
 		},
 		Resolve: func(p graphql.ResolveParams) (i interface{}, e error) {
-			type Member struct {
-				ID int `json:"id"`
-			}
 			member := Member{}
-			ToStruct(p.Args, &member)
-			return member.ID, nil
+			Ql.ToStruct(p.Args, &member)
+			return member, nil
 		},
 	})
+}
+
+type Member struct {
+	ID  int    `json:"id"`
+	Map string `json:"map"`
 }

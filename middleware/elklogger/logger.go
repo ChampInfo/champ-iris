@@ -3,11 +3,12 @@ package elklogger
 import (
 	"bytes"
 	"encoding/json"
-	"git.championtek.com.tw/go/logger/v2"
-	"github.com/kataras/iris/v12/context"
 	"io/ioutil"
 	"log"
 	"time"
+
+	"git.championtek.com.tw/go/logger/v2"
+	"github.com/kataras/iris/v12/context"
 )
 
 type Logger struct {
@@ -43,7 +44,7 @@ func (l *Logger) Serve(ctx context.Context) {
 		if len(graphqlBody.Query) != 0 {
 			logData := logger.GraphqlService{
 				IP:      port,
-				Request: ctx.GetCurrentRoute(),
+				Request: ctx.GetCurrentRoute().Name(),
 				Result:  graphqlBody.Query + " - " + graphqlBody.Variables + " - " + graphqlBody.OperationName,
 				Created: time.Now(),
 				Tags:    nil,
@@ -53,7 +54,7 @@ func (l *Logger) Serve(ctx context.Context) {
 				log.Panicln(err)
 			}
 		}
-	} else {//Restful request
+	} else { //Restful request
 
 	}
 
