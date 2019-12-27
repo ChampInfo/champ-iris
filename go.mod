@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	git.championtek.com.tw/go/champiris-contrib/graphql v0.1.1
-	git.championtek.com.tw/go/logger/v2 v2.0.9
+	git.championtek.com.tw/go/logger/v2 v2.0.10
 	git.championtek.com.tw/go/passport v1.0.3
 	git.championtek.com.tw/go/responses v1.0.7
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

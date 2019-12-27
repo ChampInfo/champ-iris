@@ -1,10 +1,13 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
+git.championtek.com.tw/go/champiris v0.2.4 h1:1kT6lufBchv59YgJmSZHE5jK0cCAPf5KdqW/uzZ6MAc=
 git.championtek.com.tw/go/champiris v0.2.4/go.mod h1:onzWvmMnWX0cuD0+562K3uEDh7Zx2DLWmb0EWFMfpfo=
 git.championtek.com.tw/go/champiris-contrib/graphql v0.1.1 h1:Jpmvj8U9rumdAkIiHykqfRbUmRaJhML9V7aSML1bQss=
 git.championtek.com.tw/go/champiris-contrib/graphql v0.1.1/go.mod h1:4u8Z+hDPZRf73H39XhyzZ9m4noUeTP7UNRBvtFStuTw=
 git.championtek.com.tw/go/logger/v2 v2.0.9 h1:Kum+wuGOjuAjeq28poPPiXxzrhom2oKiTB94F+Fn6C0=
 git.championtek.com.tw/go/logger/v2 v2.0.9/go.mod h1:KesMnshPCGj3lre7itTYheYJU6IMi0YUCTRosuh9gUI=
+git.championtek.com.tw/go/logger/v2 v2.0.10 h1:adWynSs3h7zELhxAzFRA8Ulnzl8IfdGRT1pcCTrkHTo=
+git.championtek.com.tw/go/logger/v2 v2.0.10/go.mod h1:KesMnshPCGj3lre7itTYheYJU6IMi0YUCTRosuh9gUI=
 git.championtek.com.tw/go/passport v1.0.3 h1:ublbvelzJG7TqHzqHHwlYX5th8C6p00IjnOMzvECMsk=
 git.championtek.com.tw/go/passport v1.0.3/go.mod h1:7TgWz6xL2L3MdZpd1g2slIq1PwMW+SJOJ9bBc2/CK38=
 git.championtek.com.tw/go/responses v1.0.7 h1:fKya/mKmtRJCjLmpYZa+szY/TRYppKYTzaEe1d9W6wE=
