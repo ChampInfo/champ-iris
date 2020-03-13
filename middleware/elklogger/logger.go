@@ -51,7 +51,7 @@ func (l *Logger) Serve(ctx context.Context) {
 				Remark:  "",
 			}
 			if err := logger.Mgr.PutLog(&logData); err != nil {
-				log.Panicln(err)
+				log.Println(err)
 			}
 		}
 	} else { //Restful request

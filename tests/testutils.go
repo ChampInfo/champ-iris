@@ -2,7 +2,6 @@ package tests
 
 import (
 	"errors"
-
 	"github.com/graphql-go/graphql"
 )
 

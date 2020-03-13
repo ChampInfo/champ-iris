@@ -17,14 +17,11 @@ import (
 	"github.com/iris-contrib/middleware/cors"
 )
 
-var Ql graphql.Graphql
+var Ql *graphql.Graphql
 
 func init() {
-	Ql = graphql.Graphql{
-		ShowPlayground: true,
-	}
-	Ql.Query.New("Query", "搜尋&取得資料的相關命令")
-	Ql.Mutation.New("Mutation", "主要用在建立、修改、刪除的相關命令")
+	Ql = graphql.Default()
+	Ql.ShowPlayground=true
 }
 
 func TestAPI_NewService(t *testing.T) {
@@ -78,7 +75,7 @@ func TestAPI_NewService(t *testing.T) {
 			if psp != nil {
 				m.Router.Use(psp)
 			}
-			m.Handle(&Ql)
+			m.Handle(Ql)
 		},
 	}
 	service.AddRoute(router)
