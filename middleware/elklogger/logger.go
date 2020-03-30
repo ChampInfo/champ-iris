@@ -3,6 +3,7 @@ package elklogger
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"time"
@@ -38,17 +39,19 @@ func New(cfg *logger.ELKConfig) context.Handler {
 func (l *Logger) Serve(ctx context.Context) {
 	port := ctx.RemoteAddr()
 	body, _ := ctx.GetBody()
-	if l.logType == logger.GraphqlTemplate {
+	if l.logType == logger.Graphql {
 		graphqlBody := &GraphqlBody{}
 		json.Unmarshal(body, graphqlBody)
 		if len(graphqlBody.Query) != 0 {
 			logData := logger.GraphqlService{
-				IP:      port,
-				Request: ctx.GetCurrentRoute().Name(),
-				Result:  graphqlBody.Query + " - " + graphqlBody.Variables + " - " + graphqlBody.OperationName,
-				Created: time.Now(),
-				Tags:    nil,
-				Remark:  "",
+				IP:            port,
+				Request:       ctx.GetCurrentRoute().Name(),
+				Query:         graphqlBody.Query,
+				Variables:     fmt.Sprint(graphqlBody.Variables),
+				OperationName: graphqlBody.OperationName,
+				Created:       time.Now(),
+				Tags:          nil,
+				Remark:        "",
 			}
 			if err := logger.Mgr.PutLog(&logData); err != nil {
 				log.Println(err)
