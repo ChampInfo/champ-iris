@@ -21,7 +21,7 @@ var Ql *graphql.Graphql
 
 func init() {
 	Ql = graphql.Default()
-	Ql.ShowPlayground=true
+	Ql.ShowPlayground = true
 }
 
 func TestAPI_NewService(t *testing.T) {
@@ -31,7 +31,7 @@ func TestAPI_NewService(t *testing.T) {
 
 	_ = service.New(&champiris.NetConfig{
 		Port:         "8080",
-		LoggerEnable: false,
+		LoggerEnable: true,
 		JWTEnable:    false,
 	})
 
@@ -40,7 +40,7 @@ func TestAPI_NewService(t *testing.T) {
 		elk = elklogger.New(&logger.ELKConfig{ELK: logger.ELKInfo{
 			URL:              "http://52.196.196.142",
 			Port:             "9200",
-			Type:             0,
+			Type:             logger.Graphql,
 			Index:            "champ_iris",
 			User:             "elastic",
 			Password:         "work$t/6qup3",
