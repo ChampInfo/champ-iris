@@ -42,14 +42,16 @@ func TestApi_HelloWord(t *testing.T) {
 }
 
 func apiRouter(app *mvc.Application) {
-	app.Handle(new(Hello))
+	app.Handle(new(ApiHandle))
 }
 
-type Hello struct{}
+type ApiHandle struct {
+	Ctx iris.Context
+}
 
 //get localhost:port/api/hello
-func (h *Hello) GetHello(Ctx iris.Context) {
-	Ctx.WriteString("HelloWord")
+func (h *ApiHandle) GetHello() {
+	h.Ctx.WriteString("HelloWord")
 }
 
 func TestAPI_NewService(t *testing.T) {

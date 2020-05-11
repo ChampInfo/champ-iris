@@ -4,7 +4,7 @@
 
 系統需求為 [Go Programming Language](https://golang.org/dl/), version 1.13 and above.
 
-##安裝
+## 安裝
 ```shell script
 $ go get git.championtek.com.tw/go/champiris
 ```
@@ -24,7 +24,7 @@ require (
 $ go build
 ```
 
-##如何開始
+## 如何開始
 ```go
 package main
 
@@ -49,14 +49,16 @@ func main()  {
     	service.Run()
 }
 func apiRouter(app *mvc.Application)  {
-    app.Handle(new(Hello))
+    app.Handle(new(ApiHandle))
 }
 
-type Hello struct {}
+type ApiHandle struct {
+	Ctx iris.Context
+}
 
-//get localhost:port/api/hello 
-func (h *Hello) GetHello(Ctx iris.Context) {
-	Ctx.WriteString("HelloWord")
+//get localhost:port/api/hello
+func (h *ApiHandle) GetHello() {
+	h.Ctx.WriteString("HelloWord")
 }
 ```
 
