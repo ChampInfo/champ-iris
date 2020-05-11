@@ -3,6 +3,8 @@ package tests
 import (
 	"testing"
 
+	"github.com/kataras/iris/v12"
+
 	"git.championtek.com.tw/go/champiris/middleware/jwtpassport"
 	"git.championtek.com.tw/go/passport"
 	"github.com/kataras/iris/v12/context"
@@ -22,6 +24,32 @@ var Ql *graphql.Graphql
 func init() {
 	Ql = graphql.Default()
 	Ql.ShowPlayground = true
+}
+
+func TestApi_HelloWord(t *testing.T) {
+	var service champiris.Service
+	var config champiris.NetConfig
+	config = champiris.NetConfig{
+		Port:         "8080",
+		LoggerEnable: false,
+		JWTEnable:    false}
+	service.New(&config)
+	service.AddRoute(champiris.RouterSet{
+		Party:  "/api",
+		Router: apiRouter,
+	})
+	service.Run()
+}
+
+func apiRouter(app *mvc.Application) {
+	app.Handle(new(Hello))
+}
+
+type Hello struct{}
+
+//get localhost:port/api/hello
+func (h *Hello) GetHello(Ctx iris.Context) {
+	Ctx.WriteString("HelloWord")
 }
 
 func TestAPI_NewService(t *testing.T) {
