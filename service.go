@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/kataras/iris/v12"
-	mvc "github.com/kataras/iris/v12/mvc"
+	"github.com/kataras/iris/v12/mvc"
 
 	stdContext "context"
 )
