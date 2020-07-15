@@ -23,6 +23,7 @@ func TestApi_HelloWord(t *testing.T) {
 	var service champiris.Service
 	var config champiris.NetConfig
 	config = champiris.NetConfig{
+		Host: "0.0.0.0",
 		Port: "8080"}
 	service.New(&config)
 	service.AddRoute(champiris.RouterSet{

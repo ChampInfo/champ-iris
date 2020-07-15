@@ -72,7 +72,7 @@ func (service *Service) AddRoute(set RouterSet) {
 
 func (service *Service) Run() error {
 	err := service.App.Run(
-		iris.Addr(":"+service.Config.Port),
+		iris.Addr(service.Config.Host+":"+service.Config.Port),
 		iris.WithOptimizations,
 		iris.WithoutServerError(iris.ErrServerClosed),
 	)
