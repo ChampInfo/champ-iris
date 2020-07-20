@@ -2,11 +2,6 @@ package champiris
 
 import (
 	"errors"
-	"fmt"
-	"log"
-	"os"
-	"path"
-	"runtime"
 	"time"
 
 	"github.com/kataras/iris/v12"
@@ -16,9 +11,8 @@ import (
 )
 
 type Service struct {
-	App      *iris.Application
-	Config   *NetConfig
-	HtmlPath string
+	App    *iris.Application
+	Config *NetConfig
 }
 
 type RouterSet struct {
@@ -28,16 +22,18 @@ type RouterSet struct {
 
 type RoutesFunc func(m *mvc.Application)
 
+func (service *Service) Default() error {
+	return service.New(&NetConfig{
+		Protocol: "tcp4",
+		Host:     "0.0.0.0",
+		Port:     "8080",
+	})
+}
+
 func (service *Service) New(config *NetConfig) error {
 	service.App = iris.New()
 
-	if len(service.HtmlPath) == 0 { // set the default html path
-		_, currentFilePath, _, _ := runtime.Caller(0)
-		configFilePath := path.Join(path.Dir(currentFilePath), "https/web")
-		service.HtmlPath = configFilePath
-	}
-
-	if config.Port == "" {
+	if config == nil {
 		return errors.New("network port not set")
 	}
 
@@ -61,8 +57,6 @@ func (service *Service) New(config *NetConfig) error {
 		service.App.Shutdown(ctx)
 	})
 
-	service.registerStaticWebPages(service.HtmlPath)
-
 	return nil
 }
 
@@ -82,16 +76,6 @@ func (service *Service) Run() error {
 func (service *Service) Interrupt() error {
 	err := service.App.Shutdown(stdContext.Background())
 	return err
-}
-
-func (service *Service) registerStaticWebPages(path string) {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err = os.MkdirAll(path, os.ModePerm)
-		if err != nil {
-			log.Fatal(fmt.Sprintf("Create %s error: ", path), err)
-		}
-	}
-	service.App.RegisterView(iris.HTML(path, ".html").Reload(true))
 }
 
 func (service *Service) setRoutingPath(set RouterSet) {
