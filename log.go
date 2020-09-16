@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 	"time"
 
@@ -21,8 +22,8 @@ const (
 )
 
 func init() {
-	workDirPath, _ := os.Getwd()
-	logFolder = path.Join(workDirPath, logFolder)
+	_, currentFilePath, _, _ := runtime.Caller(0)
+	logFolder = path.Join(path.Dir(currentFilePath), logFolder)
 }
 
 var excludeExtensions = [...]string{
