@@ -39,16 +39,16 @@ func (service *Service) New(config *NetConfig) error {
 
 	service.Config = config
 
-	requestLog, loggerClose := service.newRequestLogger()
-	service.App.Use(requestLog)
-	service.App.OnAnyErrorCode(requestLog, func(ctx iris.Context) {
-		ctx.Values().Set("logger_message", "a dynamic message passed to the logs")
-	})
+	//requestLog, loggerClose := service.newRequestLogger()
+	//service.App.Use(requestLog)
+	//service.App.OnAnyErrorCode(requestLog, func(ctx iris.Context) {
+	//	ctx.Values().Set("logger_message", "a dynamic message passed to the logs")
+	//})
 
 	iris.RegisterOnInterrupt(func() {
-		if err := loggerClose(); err != nil {
-			service.App.Logger().Fatal(err)
-		}
+		//if err := loggerClose(); err != nil {
+		//	service.App.Logger().Fatal(err)
+		//}
 
 		timeout := 5 * time.Second
 		ctx, cancel := stdContext.WithTimeout(stdContext.Background(), timeout)
