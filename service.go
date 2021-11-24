@@ -15,11 +15,6 @@ type Service struct {
 	Config *NetConfig
 }
 
-type RouterSet struct {
-	Party  string
-	Router RoutesFunc
-}
-
 type RoutesFunc func(m *mvc.Application)
 
 func (service *Service) Default() error {
@@ -60,14 +55,21 @@ func (service *Service) New(config *NetConfig) error {
 	return nil
 }
 
-func (service *Service) AddRoute(set RouterSet) {
-	service.setRoutingPath(set)
+func (service *Service) AddRoute(party string, routesFunc RoutesFunc) {
+	p := service.App.Party(party)
+	p.Done(setLog)
+	mvc.Configure(p, routesFunc)
+}
+
+func setLog(ctx iris.Context) {
+	//TODO 收集log
 }
 
 func (service *Service) Run() error {
 	err := service.App.Run(
 		iris.Addr(service.Config.Host+":"+service.Config.Port),
 		iris.WithOptimizations,
+		iris.WithPathEscape,
 		iris.WithoutServerError(iris.ErrServerClosed),
 	)
 	return err
@@ -76,8 +78,4 @@ func (service *Service) Run() error {
 func (service *Service) Interrupt() error {
 	err := service.App.Shutdown(stdContext.Background())
 	return err
-}
-
-func (service *Service) setRoutingPath(set RouterSet) {
-	mvc.Configure(service.App.Party(set.Party), set.Router)
 }

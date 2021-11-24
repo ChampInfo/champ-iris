@@ -14,10 +14,7 @@ func TestApi_HelloWord(t *testing.T) {
 	var service champiris.Service
 
 	service.Default()
-	service.AddRoute(champiris.RouterSet{
-		Party:  "/api",
-		Router: apiRouter,
-	})
+	service.AddRoute("/api", apiRouter)
 	service.Run()
 }
 
@@ -32,4 +29,5 @@ type ApiHandle struct {
 //get localhost:port/api/hello
 func (h *ApiHandle) GetHello() {
 	h.Ctx.WriteString("HelloWord")
+	h.Ctx.Next()
 }
