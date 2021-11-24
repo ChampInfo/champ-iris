@@ -69,6 +69,7 @@ func (service *Service) Run() error {
 	err := service.App.Run(
 		iris.Addr(service.Config.Host+":"+service.Config.Port),
 		iris.WithOptimizations,
+		iris.WithPathEscape,
 		iris.WithoutServerError(iris.ErrServerClosed),
 	)
 	return err
